@@ -180,13 +180,22 @@ rb.url = {
 		route	:	function(url)
 		{
 			// already a complete URL
-			if(url.indexOf('http://') === -1) {
+			// check if url does not contain root url. Base url itself contain root.
+			// root is being checked because, admin side can use front end url.
+			if(url.indexOf(rb_vars['url']['root']) === -1) {
 					// is it already routed URL without http ?
 				  var base2_url_index = url.indexOf(rb_vars['url']['base_without_scheme']);
 				  // only add if, its not routed URL
-				  if(base2_url_index === -1 ){
-					  url = rb_vars['url']['base'] + url;
+				  if(base2_url_index > -1){
+					 url = url.replace(rb_vars['url']['base_without_scheme'], '');
 				  }
+				  
+				  var containsSlash = url.substr(0,1);
+				  if (containsSlash == '/') {
+					  url = url.substr(1);
+				  }
+				  
+				  url = rb_vars['url']['base'] + url;
 			}
 			
 			return url;
@@ -434,4 +443,5 @@ $(document).ready(function(){
 //Scoping code for easy and non-conflicting access to $.
 //Should be last line, write code above this line.
 })(rb.jQuery);
+
 
